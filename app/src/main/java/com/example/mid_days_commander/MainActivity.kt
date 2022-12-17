@@ -30,8 +30,8 @@ class CustomAdapter(context: Context, private val list: List<File>) : ArrayAdapt
         val textView = view as TextView
         val file = list[position]
         if (file.canRead() && !file.canWrite()) { // Set the text color of folders to red
-//            textView.setTextColor(Color.RED)
-            textView.alpha = 0.2f
+            textView.setTextColor(Color.RED)
+            textView.alpha
         }
         return view
     }
@@ -237,12 +237,12 @@ class MainActivity : AppCompatActivity() {
         filesArrStrCurrently.add("/..")
         val files = File(dir).listFiles()
         for(fil in files) {
-//            if (fil.canRead() && !fil.canWrite()) {
-//                // The file is only readable
-//                filesArrStrCurrently.add(fil.name)
-//                fil.alpha = 0.5f
-//            }
-//            filesArrStrCurrently.add(fil.name)
+            if (fil.canRead() && !fil.canWrite()) {
+                // The file is only readable
+                filesArrStrCurrently.add(fil.name)
+
+            }
+            filesArrStrCurrently.add(fil.name)
         }
         return filesArrStrCurrently;
     }
@@ -260,7 +260,6 @@ class MainActivity : AppCompatActivity() {
                         android.R.layout.simple_list_item_1,
                         convertToTitle(currPathL)
                     )
-
                 }
                 else {
                     currPathR = currPathR.replace("/"+lastChooseL, "")
@@ -348,11 +347,9 @@ class MainActivity : AppCompatActivity() {
         arrayAdapter = ArrayAdapter(this,
             android.R.layout.simple_list_item_1, filesArrStr)
 
-        val adapter = CustomAdapter(this, filesArrFile)
-//        mListView.adapter = arrayAdapter
 
-
-        mListView.adapter = adapter
+        mListView.adapter = arrayAdapter
+//        mListView.adapter = adapter
 
 
 
@@ -360,21 +357,20 @@ class MainActivity : AppCompatActivity() {
         var rListView = findViewById<ListView>(R.id.right)
         arrayAdapterRight = ArrayAdapter(this,
             android.R.layout.simple_list_item_1, filesArrStr)
-//        rListView.adapter = arrayAdapterRight
-        rListView.adapter = adapter
+        rListView.adapter = arrayAdapterRight
 
 
 
 
         // left
 
-        mListView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+        mListView.onItemLongClickListener = AdapterView.OnItemLongClickListener { adapterView, view, i, l ->
             // Get the object at the clicked position
+
             val item = adapterView.getItemAtPosition(i)
 
             val directionFolder = item.toString()
-            println(directionFolder)
-            println(File(currPathL+"/"+directionFolder).isDirectory)
+
             if(File(currPathL+"/"+directionFolder).isDirectory) {
                 mListView.adapter =
                     changeCurrentlyDirectoryOnListView(mListView, directionFolder, "l")
@@ -382,13 +378,13 @@ class MainActivity : AppCompatActivity() {
             else {
                 openFile(directionFolder, "l")
             }
-
+            true
         }
 
 
         // right
 
-        rListView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+        rListView.onItemLongClickListener = AdapterView.OnItemLongClickListener { adapterView, view, i, l ->
             // Get the object at the clicked position
             val item = adapterView.getItemAtPosition(i)
 
@@ -399,7 +395,7 @@ class MainActivity : AppCompatActivity() {
             else {
                 openFile(directionFolder, "r")
             }
-
+            true
         }
         // button create
         val buttonCreate = findViewById<Button>(R.id.createBtn)
