@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <ListView
+        android:id="@+id/right"
+        android:layout_width="359dp"
+        android:layout_height="308dp"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="2dp"
+        tools:ignore="DuplicateClickableBoundsCheck" />
+
+    <ListView
+        android:id="@+id/left"
+        android:layout_width="359dp"
+        android:layout_height="308dp"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="21dp"
+        tools:ignore="DuplicateClickableBoundsCheck" />
+
+    <Button
+        android:id="@+id/copyBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toStartOf="@+id/openBtn2"
+        android:backgroundTint="#32a89e"
+        android:text="Copy"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/menuBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="31dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toStartOf="@+id/createBtn"
+        android:backgroundTint="#32a89e"
+        android:text="Menu"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/createBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="149dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toStartOf="@+id/moveBtn2"
+        android:backgroundTint="#32a89e"
+        android:text="Create"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/delBtn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="31dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toStartOf="@+id/moveBtn2"
+        android:backgroundTint="#32a89e"
+        android:text="Delete"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/moveBtn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="31dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toStartOf="@+id/copyBtn"
+        android:backgroundTint="#32a89e"
+        android:text="move"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/openBtn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="31dp"
+        android:layout_marginBottom="0dp"
+        android:backgroundTint="#32a89e"
+        android:text="Open"
+        android:textColor="#ffffff" />
+
+</RelativeLayout>
