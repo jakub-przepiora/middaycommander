@@ -44,7 +44,7 @@
         android:textColor="#ffffff" />
 
     <Button
-        android:id="@+id/menuBtn"
+        android:id="@+id/editBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -52,7 +52,7 @@
         android:layout_marginBottom="0dp"
         android:layout_toStartOf="@+id/createBtn"
         android:backgroundTint="#32a89e"
-        android:text="Menu"
+        android:text="edit"
         android:textColor="#ffffff" />
 
     <Button

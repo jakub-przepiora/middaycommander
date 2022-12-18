@@ -11,9 +11,9 @@
 
 
     <EditText
-        android:id="@+id/editTextTextMultiLine"
+        android:id="@+id/editTextarea"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="312dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="0dp"
@@ -22,4 +22,29 @@
         android:gravity="start|top"
         android:inputType="textMultiLine"
         tools:ignore="SpeakableTextPresentCheck" />
+    <Button
+        android:id="@+id/goToHome"
+        android:layout_width="103dp"
+        android:layout_height="44dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="11dp"
+        android:text="Back"
+        android:backgroundTint="#32a89e"
+
+        android:textColor="#ffffff"/>
+
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="103dp"
+        android:layout_height="44dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="144dp"
+        android:layout_marginBottom="9dp"
+        android:backgroundTint="#32a89e"
+        android:text="Save"
+
+        android:textColor="#ffffff" />
 </RelativeLayout>

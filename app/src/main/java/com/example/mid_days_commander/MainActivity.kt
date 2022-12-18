@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -21,7 +22,6 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.attribute.PosixFilePermission
-import kotlin.Any as Any
 
 class CustomAdapter(context: Context, private val list: List<File>) : ArrayAdapter<File>(context, android.R.layout.simple_list_item_1, list) {
 
@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private var actionPathCheckedRight = ""
     private var lastColumnCheck = ""
 
+    private var creatingFilePath = ""
 //    private var mListView = findViewById<ListView>(R.id.left)
 //    private var rListView = findViewById<ListView>(R.id.right)
 
@@ -157,10 +158,12 @@ class MainActivity : AppCompatActivity() {
         if(lastColumnCheck == "l"){
             println(currPathL+"/"+filename+".txt")
             file = File(currPathL+"/"+filename+".txt")
+            creatingFilePath = currPathL+"/"+filename+".txt"
         }
         else {
             println(currPathR+"/"+filename+".txt")
             file = File(currPathR+"/"+filename+".txt")
+            creatingFilePath = currPathR+"/"+filename+".txt"
         }
         file.writeText("Hello, world!")
 
@@ -473,16 +476,48 @@ class MainActivity : AppCompatActivity() {
                 reloadListing("l")
 //                recreate()
 
+                // open in editor
+                setContentView(R.layout.activity_edit)
+                val editTextarea = findViewById<EditText>(R.id.editTextarea)
+                var contentToRender = ""
+
+                editTextarea.setText(contentToRender)
+
+                val buttonBack = findViewById<Button>(R.id.goToHome)
+
+                buttonBack.setOnClickListener {
+                    println("second view")
+                    setContentView(R.layout.activity_main)
+                    reloadListing("both")
+                    recreate()
+
+
+                }
+                val buttonSave = findViewById<Button>(R.id.saveBtn)
+
+                buttonSave.setOnClickListener {
+                    println("second view")
+                    val currContent = editTextarea.getText()
+                    val file = File(creatingFilePath)
+                    file.writeText(currContent.toString())
+                    setContentView(R.layout.activity_main)
+                    reloadListing("both")
+                    recreate()
+
+
+                }
             }
             val alertDialog = builder.create()
             alertDialog.show()
+
+
 
         }
         // button create
         val buttonOpen = findViewById<Button>(R.id.openBtn2)
 
         buttonOpen.setOnClickListener {
-//            setContentView(R.layout.activity_edit)
+
             openFile()
         }
 
@@ -540,6 +575,76 @@ class MainActivity : AppCompatActivity() {
             }
             reloadListing("both")
         }
+
+
+        // button create
+        val buttonEdit = findViewById<Button>(R.id.editBtn)
+
+        buttonEdit.setOnClickListener {
+//            setContentView(R.layout.activity_edit)
+            setContentView(R.layout.activity_edit)
+            var pathToEdit = ""
+
+            if(lastColumnCheck == "l"){
+                pathToEdit = currPathL+"/"+actionPathCheckedLeft
+
+            }
+            else {
+                pathToEdit = currPathR+"/"+actionPathCheckedRight
+
+            }
+            val file = File(pathToEdit)
+
+            if(file.getExtension() == "txt"){
+                setContentView(R.layout.activity_edit)
+
+                val reader = BufferedReader(file.reader())
+                val editTextarea = findViewById<EditText>(R.id.editTextarea)
+                var contentToRender = ""
+
+                var line = reader.readLine()
+                while (line != null) {
+                    println("linia wirtualna")
+                    println(line)
+
+                    contentToRender += line
+                    line = reader.readLine()
+
+                }
+                editTextarea.setText(contentToRender)
+
+
+                reader.close()
+                val buttonBack = findViewById<Button>(R.id.goToHome)
+
+                buttonBack.setOnClickListener {
+                    println("second view")
+                    setContentView(R.layout.activity_main)
+                    reloadListing("both")
+                    recreate()
+
+
+                }
+                val buttonSave = findViewById<Button>(R.id.saveBtn)
+
+                buttonSave.setOnClickListener {
+                    println("second view")
+                    val currContent = editTextarea.getText()
+                    val file = File(pathToEdit)
+                    file.writeText(currContent.toString())
+                    setContentView(R.layout.activity_main)
+                    reloadListing("both")
+                    recreate()
+
+
+                }
+
+            }
+            else {
+                showDialogAlert("It isn't file", "Edit file")
+            }
+        }
+
         // checkers
         // left
 
