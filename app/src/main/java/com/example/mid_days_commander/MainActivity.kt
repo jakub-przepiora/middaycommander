@@ -47,9 +47,9 @@ class MainActivity : AppCompatActivity() {
     private var lastChooseR = ""
     private var currPathR = "/sdcard"
 
-    private var actionPathCheckedLeft = ""
-    private var actionPathCheckedRight = ""
-    private var lastColumnCheck = ""
+    private var actionPathCheckedLeft = "/sdcard"
+    private var actionPathCheckedRight = "/sdcard"
+    private var lastColumnCheck = "l"
 
     private var creatingFilePath = ""
 //    private var mListView = findViewById<ListView>(R.id.left)
@@ -644,7 +644,41 @@ class MainActivity : AppCompatActivity() {
                 showDialogAlert("It isn't file", "Edit file")
             }
         }
+        val buttonInfo = findViewById<Button>(R.id.infoBtn)
 
+        buttonInfo.setOnClickListener{
+            var pathToInfo = ""
+
+            if(lastColumnCheck == "l"){
+                pathToInfo = currPathL+"/"+actionPathCheckedLeft
+
+            }
+            else {
+                pathToInfo = currPathR+"/"+actionPathCheckedRight
+
+            }
+            val file = File(pathToInfo)
+            var contentView = ""
+
+            if (file.canRead()) {
+                contentView += "Read\n"
+            } else {
+                contentView += "Not read\n"
+            }
+            if (file.canWrite()) {
+                contentView += "Write\n"
+            } else {
+                contentView += "Not write\n"
+            }
+            if (file.canExecute()) {
+                contentView += "Execute\n"
+            } else {
+                contentView += "Not execute\n"
+            }
+
+            showDialogAlert("Permission in '"+pathToInfo+"':\n"+contentView, "Info Permission")
+
+        }
         // checkers
         // left
 
