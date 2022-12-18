@@ -47,6 +47,10 @@ class MainActivity : AppCompatActivity() {
     private var lastChooseR = ""
     private var currPathR = "/sdcard"
 
+    private var actionPathCheckedLeft = ""
+    private var actionPathCheckedRight = ""
+    private var lastColumnCheck = ""
+
 //    private var mListView = findViewById<ListView>(R.id.left)
 //    private var rListView = findViewById<ListView>(R.id.right)
 
@@ -88,8 +92,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showDialogAlert(contentAlert: String) {
+    fun showDialogAlert(contentAlert: String, titleDialog: String) {
+        val errorNotification = AlertDialog.Builder(this)
 
+        // Set the title and message of the AlertDialog
+        errorNotification.setTitle(titleDialog)
+        errorNotification.setMessage(contentAlert)
+
+        val alertDialog = errorNotification.create()
+        alertDialog.show()
     }
 
     fun reloadListing(side: String) {
@@ -142,9 +153,15 @@ class MainActivity : AppCompatActivity() {
 
     // Function to createFile
     fun createFile(filename: String) {
-
-        println(currPathL+"/"+filename+".txt")
-        val file = File(currPathL+"/"+filename+".txt")
+        var file = File(currPathL+"/"+filename+".txt")
+        if(lastColumnCheck == "l"){
+            println(currPathL+"/"+filename+".txt")
+            file = File(currPathL+"/"+filename+".txt")
+        }
+        else {
+            println(currPathR+"/"+filename+".txt")
+            file = File(currPathR+"/"+filename+".txt")
+        }
         file.writeText("Hello, world!")
 
         // Create the file
@@ -302,17 +319,39 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-    fun copyFile(from: String, destiny: String, filename: String) {
+    fun copyFile() {
 
-        // The file that you want to copy
-//        val sourceFile = File(from+"/"+filename)
-        val sourceFile = File("/sdcard/Documents/tekst1.txt")
-        // The destination for the copied file
-//        val destinationFile = File(destiny+"/"+filename)
-        val destinationFile = File("/sdcard/Download/tekst1.txt")
+        var pathFrom = ""
+        var pathDestiny = ""
+        if(lastColumnCheck == "l"){
+            pathFrom = currPathL+"/"+actionPathCheckedLeft
+            pathDestiny = currPathR+"/"+actionPathCheckedLeft
+        }
+        else {
+            pathFrom = currPathR+"/"+actionPathCheckedRight
+            pathDestiny = currPathL+"/"+actionPathCheckedRight
+        }
 
+        val sourceFile = File(pathFrom)
+
+        val destinationFile = File(pathDestiny)
+
+        if (destinationFile.isFile) {
+
+            showDialogAlert("Can't copy! File already exists","Copy file")
+
+        } else if (destinationFile.isDirectory) {
+
+            println("File exists and is a directory")
+
+            showDialogAlert("Can't copy! Directory already exists","Copy directory")
+        } else {
+            sourceFile.copyTo(destinationFile, overwrite = true)
+            reloadListing("both")
+        }
         // Copy the file
-        sourceFile.copyTo(destinationFile, overwrite = true)
+
+
     }
 
 
@@ -368,7 +407,7 @@ class MainActivity : AppCompatActivity() {
             // Get the object at the clicked position
 
             val item = adapterView.getItemAtPosition(i)
-
+            lastColumnCheck = "l"
             val directionFolder = item.toString()
 
             if(File(currPathL+"/"+directionFolder).isDirectory) {
@@ -387,9 +426,9 @@ class MainActivity : AppCompatActivity() {
         rListView.onItemLongClickListener = AdapterView.OnItemLongClickListener { adapterView, view, i, l ->
             // Get the object at the clicked position
             val item = adapterView.getItemAtPosition(i)
-
+            lastColumnCheck = "r"
             val directionFolder = item.toString()
-            if(File(currPathL+"/"+directionFolder).isDirectory) {
+            if(File(currPathR+"/"+directionFolder).isDirectory) {
                 rListView.adapter = changeCurrentlyDirectoryOnListView(rListView, directionFolder, "r")
             }
             else {
@@ -397,6 +436,8 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+
         // button create
         val buttonCreate = findViewById<Button>(R.id.createBtn)
 
@@ -417,7 +458,7 @@ class MainActivity : AppCompatActivity() {
                 val filenameFromInput = input.getText().toString()
                 createFile(filenameFromInput)
                 reloadListing("l")
-                recreate()
+//                recreate()
 
             }
             val alertDialog = builder.create()
@@ -434,8 +475,59 @@ class MainActivity : AppCompatActivity() {
         val buttonCopy = findViewById<Button>(R.id.copyBtn)
 
         buttonCopy.setOnClickListener{
-            copyFile("","","")
+            copyFile()
         }
+        val buttonDel = findViewById<Button>(R.id.delBtn2)
+
+        buttonDel.setOnClickListener{
+            var pathToDel = ""
+
+            if(lastColumnCheck == "l"){
+                pathToDel = currPathL+"/"+actionPathCheckedLeft
+
+            }
+            else {
+                pathToDel = currPathR+"/"+actionPathCheckedRight
+
+            }
+            val directory = File(pathToDel)
+            if (directory.deleteRecursively()) {
+                showDialogAlert("Deleted successfully", "Delete")
+            } else {
+
+                showDialogAlert("Deleted failed", "Delete")
+            }
+            reloadListing("both")
+
+
+        }
+
+        // checkers
+        // left
+
+        mListView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+            // Get the object at the clicked position
+
+            val item = adapterView.getItemAtPosition(i)
+
+            val directionFolder = item.toString()
+            actionPathCheckedLeft = directionFolder
+            lastColumnCheck = "l"
+        }
+
+
+        // right
+
+        rListView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+            // Get the object at the clicked position
+            val item = adapterView.getItemAtPosition(i)
+
+            val directionFolder = item.toString()
+            actionPathCheckedRight = directionFolder
+            lastColumnCheck = "r"
+        }
+
+
     }
 }
 
