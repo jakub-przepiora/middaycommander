@@ -172,11 +172,11 @@ class MainActivity : AppCompatActivity() {
     fun openImg(namefile: String, side: String){
         setContentView(R.layout.activity_image)
 
-        val pathToImg = if(side == "l") currPathL else currPathR
+//        val pathToImg = if(side == "l") currPathL else currPathR
 
         val imageView = findViewById<ImageView>(R.id.imageViewPresent)
 
-        val image = BitmapFactory.decodeFile(pathToImg+"/"+namefile)
+        val image = BitmapFactory.decodeFile(namefile)
 
         imageView.setImageBitmap(image)
         val buttonBack = findViewById<Button>(R.id.goToHome)
@@ -190,11 +190,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Fun to open files
-    fun openFile (namefile: String, side: String = "l") {
-        val pathToAdd = if(side == "l") currPathL
-        else currPathR
-        val file = File(pathToAdd+"/"+namefile)
-        println(pathToAdd+"/"+namefile)
+    fun openFile (namefile: String="", side: String = "l") {
+
+        var pathToOpen = ""
+        if(lastColumnCheck == "l"){
+            pathToOpen = currPathL+"/"+actionPathCheckedLeft
+
+        }
+        else {
+            pathToOpen = currPathR+"/"+actionPathCheckedRight
+
+        }
+        if(File(pathToOpen).isDirectory){
+            showDialogAlert("I can't open folder", "Open")
+        }
+
+
+        val file = File(pathToOpen)
+        println(pathToOpen+"/"+namefile)
         val fileExtension = file.getExtension();
 
         if(fileExtension == "txt"){
@@ -228,7 +241,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         else if (fileExtension == "jpg" || fileExtension == "png") {
-            openImg(namefile, side)
+            openImg(pathToOpen,"")
         }
         else {
             val errorNotification = AlertDialog.Builder(this)
@@ -469,8 +482,10 @@ class MainActivity : AppCompatActivity() {
         val buttonOpen = findViewById<Button>(R.id.openBtn2)
 
         buttonOpen.setOnClickListener {
-            setContentView(R.layout.activity_edit)
+//            setContentView(R.layout.activity_edit)
+            openFile()
         }
+
 
         val buttonCopy = findViewById<Button>(R.id.copyBtn)
 
@@ -502,6 +517,29 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        val buttonMove = findViewById<Button>(R.id.moveBtn2)
+
+        buttonMove.setOnClickListener{
+            copyFile()
+            var pathToDel = ""
+
+            if(lastColumnCheck == "l"){
+                pathToDel = currPathL+"/"+actionPathCheckedLeft
+
+            }
+            else {
+                pathToDel = currPathR+"/"+actionPathCheckedRight
+
+            }
+            val directory = File(pathToDel)
+            if (directory.deleteRecursively()) {
+                showDialogAlert("Moved successfully", "Moved")
+            } else {
+
+                showDialogAlert("Moved failed", "Moved")
+            }
+            reloadListing("both")
+        }
         // checkers
         // left
 
